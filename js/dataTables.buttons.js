@@ -1,4 +1,4 @@
-/*! Buttons for DataTables 1.7.0
+/*! Buttons for DataTables 1.6.6
  * ©2016-2021 SpryMedia Ltd - datatables.net/license
  */
 
@@ -585,7 +585,7 @@ $.extend( Buttons.prototype, {
 		}
 
 		// Make sure that the button is available based on whatever requirements
-		// it has. For example, PDF button require pdfmake
+		// it has. For example, Flash buttons require Flash
 		if ( config.available && ! config.available( dt, config ) ) {
 			return false;
 		}
@@ -1520,7 +1520,10 @@ Buttons.defaults = {
 			className: ''
 		},
 		button: {
-			tag: 'button',
+			// Flash buttons will not work with `<button>` in IE - it has to be `<a>`
+			tag: 'ActiveXObject' in window ?
+				'a' :
+				'button',
 			className: 'dt-button',
 			active: 'active',
 			disabled: 'disabled'
@@ -1537,7 +1540,7 @@ Buttons.defaults = {
  * @type {string}
  * @static
  */
-Buttons.version = '1.7.0';
+Buttons.version = '1.6.6';
 
 
 $.extend( _dtButtons, {
@@ -1568,20 +1571,35 @@ $.extend( _dtButtons, {
 		if ( _dtButtons.copyHtml5 ) {
 			return 'copyHtml5';
 		}
+		if ( _dtButtons.copyFlash && _dtButtons.copyFlash.available( dt, conf ) ) {
+			return 'copyFlash';
+		}
 	},
 	csv: function ( dt, conf ) {
+		// Common option that will use the HTML5 or Flash export buttons
 		if ( _dtButtons.csvHtml5 && _dtButtons.csvHtml5.available( dt, conf ) ) {
 			return 'csvHtml5';
 		}
+		if ( _dtButtons.csvFlash && _dtButtons.csvFlash.available( dt, conf ) ) {
+			return 'csvFlash';
+		}
 	},
 	excel: function ( dt, conf ) {
+		// Common option that will use the HTML5 or Flash export buttons
 		if ( _dtButtons.excelHtml5 && _dtButtons.excelHtml5.available( dt, conf ) ) {
 			return 'excelHtml5';
 		}
+		if ( _dtButtons.excelFlash && _dtButtons.excelFlash.available( dt, conf ) ) {
+			return 'excelFlash';
+		}
 	},
 	pdf: function ( dt, conf ) {
+		// Common option that will use the HTML5 or Flash export buttons
 		if ( _dtButtons.pdfHtml5 && _dtButtons.pdfHtml5.available( dt, conf ) ) {
 			return 'pdfHtml5';
+		}
+		if ( _dtButtons.pdfFlash && _dtButtons.pdfFlash.available( dt, conf ) ) {
+			return 'pdfFlash';
 		}
 	},
 	pageLength: function ( dt ) {
